@@ -1,0 +1,6 @@
+.work/
+firmware/
+logs/
+*.zip
+*.csv
+*.CSV

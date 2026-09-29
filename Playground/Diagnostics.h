@@ -1,0 +1,40 @@
+#pragma once
+#include <Arduino.h>
+struct Diagnostics {
+  bool buttonsOnline=false, sdMounted=false;
+  uint8_t pressed=0, seen=0, i2cCount=0, addresses[112]={};
+  uint8_t lastButton=255;
+  uint8_t tftPower=0, tftFormat=0, tftId[3]={};
+  uint32_t buttonErrors=0, transitions=0;
+  bool shtValid=false;
+  uint8_t shtAddress=0;
+  float temperatureC=0, humidity=0;
+  uint32_t shtSamples=0, shtErrors=0;
+  uint8_t view=0, graphWindow=1, setting=0;
+  bool fahrenheit=false, logging=false, logError=false, alerts=false, alarm=false;
+  float highTempC=30, highHumidity=70;
+  uint32_t logRows=0, uiRevision=0;
+  char logName[13]={};
+};
+struct ClimatePoint { uint32_t ms; float temperatureC, humidity; };
+constexpr uint16_t HISTORY_CAPACITY=900;
+extern ClimatePoint history[HISTORY_CAPACITY];
+extern uint16_t historyCount, historyHead;
+void climateTick(Diagnostics& d);
+void dashboardButton(Diagnostics& d, uint8_t mask);
+void toggleLogging(Diagnostics& d);
+void stopLogging(Diagnostics& d);
+void dumpLog(const Diagnostics& d);
+void climateLeds(const Diagnostics& d);
+void sensorTick(Diagnostics& d);
+void ioBegin(Diagnostics& d);
+void scanI2c(Diagnostics& d);
+void probeSd(Diagnostics& d);
+uint8_t pollButtons(Diagnostics& d);
+void printStatus(const Diagnostics& d);
+void displayBegin(Diagnostics& d);
+void displayUpdate(const Diagnostics& d);
+void outputsBegin();
+void outputsTick();
+void toggleLeds();
+void beep();
